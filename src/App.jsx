@@ -5,20 +5,12 @@ function App() {
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    const fetchCountries = async () => {
-      try {
-        const response = await fetch(
-          "https://countries-search-data-prod-812920491762.asia-south1.run.app/countries",
-        );
-
-        const data = await response.json();
-        setCountries(data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchCountries();
+    fetch(
+      "https://countries-search-data-prod-812920491762.asia-south1.run.app/countries",
+    )
+      .then((res) => res.json())
+      .then((data) => setCountries(data))
+      .catch((err) => console.error(err));
   }, []);
 
   const filteredCountries = countries.filter((country) =>
@@ -26,49 +18,40 @@ function App() {
   );
 
   return (
-    <div style={{ padding: "20px" }}>
-      <div style={{ display: "flex", justifyContent: "center" }}>
-        <input
-          type="text"
-          placeholder="Search for countries..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          style={{
-            width: "300px",
-            padding: "8px",
-            marginBottom: "20px",
-          }}
-        />
-      </div>
+    <div>
+      <input
+        type="text"
+        placeholder="Search for countries..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+      />
 
       <div
         style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))",
+          display: "flex",
+          flexWrap: "wrap",
           gap: "16px",
+          marginTop: "20px",
         }}
       >
         {filteredCountries.map((country) => (
           <div
             key={country.common}
+            className="countryCard"
             style={{
               border: "1px solid #ccc",
-              borderRadius: "8px",
-              padding: "12px",
+              width: "150px",
+              padding: "10px",
               textAlign: "center",
             }}
           >
             <img
               src={country.png}
-              alt={`Flag of ${country.common}`}
-              style={{
-                width: "100px",
-                height: "60px",
-                objectFit: "cover",
-              }}
+              alt={country.common}
+              width="100"
+              height="60"
             />
-
-            <h4>{country.common}</h4>
+            <h3>{country.common}</h3>
           </div>
         ))}
       </div>
